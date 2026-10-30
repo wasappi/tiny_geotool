@@ -1,5 +1,6 @@
 from pystac_client import Client
 from fastapi import HTTPException, Query
+from shapely.geometry import shape, box
 from app.services.raster_processor import compute_ndvi
 
 client = Client.open("https://earth-search.aws.element84.com/v1")
@@ -18,18 +19,34 @@ def search(bbox:str, datetime_month: str, max_items:int=3, collections:list=["se
         datetime=datetime_month,
         query={"eo:cloud_cover": {"lt": 60}} # Pre-filter to remove any dataset with too much clouds
     )
-    for item in results.items():
+    search_area = box(*coords) 
+    items = results.item_collection()
+    candidates = [item for item in items if item.geometry is not None and shape(item.geometry).contains(search_area)] # Skip Empty tiles and tiles that do not contains our bounding box
+    
+    measures = []
+    for item in candidates:
+        props = item.properties
         red_url = item.assets["red"].href
         nir_url = item.assets["nir"].href
-        print(f"ID: {item.id} - Cloud cover: {item.properties['eo:cloud_cover']} % - Red: {red_url} - NIR: {nir_url}")
-        compute_ndvi(red_url, nir_url, coords, item.id)
-    
-    # print('\n' + '='*40, flush=True)
-    # print(f'DEBUG TARGET -> pystac search results: {results.matched} items found', flush=True)
-    # print('='*40 + '\n', flush=True)
-    # for item in results.items():
-    #     print(f"ID: {item.id} - Cloud cover: {item.properties['eo:cloud_cover']}%")
-    
+        stats = compute_ndvi(red_url, nir_url, coords)
+        measures.append({
+            "date": props["datetime"],
+            "bbox": {
+                "left": coords[0],
+                "bottom": coords[1],
+                "right": coords[2],
+                "top": coords[3]
+            },
+            "item_id": item.id,
+            "platform": props["platform"],
+            "clouds": {
+                "thin_cirrus_pct": props.get("s2:thin_cirrus_percentage"),
+                "medium_proba_clouds_pct": props.get("s2:medium_proba_clouds_percentage"),
+                "high_proba_clouds_pct": props.get("s2:high_proba_clouds_percentage"),
+            },
+            **stats,
+        })
+    return {"measures": measures}
 
 
 # Output

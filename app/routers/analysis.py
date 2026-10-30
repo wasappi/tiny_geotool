@@ -17,4 +17,4 @@ Month = Annotated[str, Query(description="Month as YYYY-MM"), AfterValidator(val
 
 @router.get("/analysis/", tags=["analysis"])
 def start_analysis(datetime_month:Month="2026-06", bbox:str="4.272994995117188, 50.798774416257544, 4.455299377441407, 50.885708708915175"):
-    search(bbox=bbox, datetime_month=datetime_month)
+    return search(bbox=bbox, datetime_month=datetime_month)
