@@ -7,6 +7,9 @@ from app.database import engine, Base
 from app.routers import analysis
 from app.internal import admin
 from app.dependencies import get_query_token, get_token_header
+from app.config import settings 
+from fastapi.staticfiles import StaticFiles
+from datetime import date
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,9 +24,12 @@ app = FastAPI(
 
 app.include_router(analysis.router)
 app.include_router(admin.router, dependencies=[Depends(get_token_header)])
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
+templates.env.globals["mapbox_token"] = settings.mapbox_api_key
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html")
+    current_month = date.today().strftime("%Y-%m")
+    return templates.TemplateResponse(request=request, name="index.html", context={"current_month": current_month})

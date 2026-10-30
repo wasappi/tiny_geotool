@@ -12,6 +12,7 @@ dependencies = [
     "matplotlib>=3.11.2",
     "pwdlib[argon2]>=0.3.1",
     "pydantic>=2.14.1",
+    "pydantic-settings>=2.16.2",
     "pystac-client>=0.9.1",
     "pytest>=9.1.1",
     "python-multipart>=0.0.32",
