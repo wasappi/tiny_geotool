@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from app.models.observation import Observation
 
 class Analysis(Base):
-    __tablename__ = "analysis"
+    __tablename__ = "analyses"
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     month: Mapped[str]
@@ -18,7 +18,7 @@ class Analysis(Base):
     max_lon: Mapped[float]
     max_lat: Mapped[float]
     bbox: Mapped[str] 
-    observations: Mapped[list[Observation]] = relationship(back_populates="summary", cascade="all, delete-orphan")
+    observations: Mapped[list[Observation]] = relationship(back_populates="analyses", cascade="all, delete-orphan")
 
     # Summary
     usable_count: Mapped[int] = mapped_column(default=0)

@@ -20,6 +20,6 @@ class Observation(Base):
     observed_at: Mapped[datetime]
     raster_id: Mapped[str]
     usable: Mapped[bool]
-    analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), index=True)
+    analysis_id: Mapped[int] = mapped_column(ForeignKey("analyses.id"), index=True)
     analysis: Mapped[Analysis] = relationship(back_populates="observations")
     
