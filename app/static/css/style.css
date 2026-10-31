@@ -15,3 +15,8 @@
 .htmx-request.htmx-indicator {
     display: inline-block;
 }
+
+.ndvi-chart {
+    max-width: 220px;
+    margin: 0 auto;
+}

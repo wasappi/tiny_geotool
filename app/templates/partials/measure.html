@@ -1,0 +1,43 @@
+{% if summary %}
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-baseline mb-3">
+            <h6 class="mb-0">{{ month }}</h6>
+            <span class="text-muted small">average of {{ usable_count }} clear observation(s)</span>
+        </div>
+
+        <div class="ndvi-chart mb-3">
+            <canvas
+                data-ndvi-chart='{{ [summary.water_pct, summary.built_bare_pct, summary.sparse_veg_pct, summary.dense_veg_pct] | tojson }}'></canvas>
+        </div>
+
+        <ul class="list-group list-group-flush small">
+            {% for m in measures %}
+            <li
+                class="list-group-item d-flex justify-content-between align-items-center px-0 {% if not m.usable %}text-muted{% endif %}">
+                <span>
+                    {{ m.date[:10] }}
+                    <span class="text-muted">· {{ m.platform }}</span>
+                </span>
+                {% if m.usable %}
+                <span>
+                    {{ "%.0f"|format(m.dense_veg_pct) }} % dense ·
+                    {{ "%.0f"|format(m.sparse_veg_pct) }} % sparse
+                    <span class="text-muted">· {{ "%.0f"|format(m.aoi_clear_pct) }} % clear</span>
+                </span>
+                {% else %}
+                <span><i class="bi bi-cloud"></i> too cloudy ({{ "%.0f"|format(m.aoi_clear_pct) }} % clear) —
+                    excluded</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% else %}
+<div class="card border-0 shadow-sm rounded-4 bg-body-tertiary">
+    <div class="card-body text-muted small">
+        <i class="bi bi-cloud"></i> No clear observation for {{ month }}: every pass was too cloudy over this area.
+    </div>
+</div>
+{% endif %}

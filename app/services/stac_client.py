@@ -2,6 +2,7 @@ from pystac_client import Client
 from fastapi import HTTPException, Query
 from shapely.geometry import shape, box
 from app.services.raster_processor import compute_ndvi
+from statistics import fmean
 
 client = Client.open("https://earth-search.aws.element84.com/v1")
 
@@ -28,7 +29,8 @@ def search(bbox:str, datetime_month: str, max_items:int=3, collections:list=["se
         props = item.properties
         red_url = item.assets["red"].href
         nir_url = item.assets["nir"].href
-        stats = compute_ndvi(red_url, nir_url, coords)
+        scl_url = item.assets["scl"].href
+        stats = compute_ndvi(red_url, nir_url, scl_url, coords)
         measures.append({
             "date": props["datetime"],
             "bbox": {
