@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     env_file_encoding="utf-8",
     env_prefix="",
     extra="ignore",
-  )
+    )
+    database_url: str
+
 
 settings = Settings()

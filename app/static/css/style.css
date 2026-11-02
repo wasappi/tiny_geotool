@@ -20,3 +20,23 @@
     max-width: 220px;
     margin: 0 auto;
 }
+
+.ndvi-bar {
+    height: 6px;
+}
+
+.ndvi-water {
+    background-color: #3b82f6;
+}
+
+.ndvi-built {
+    background-color: #a8a29e;
+}
+
+.ndvi-sparse {
+    background-color: #86efac;
+}
+
+.ndvi-dense {
+    background-color: #15803d;
+}

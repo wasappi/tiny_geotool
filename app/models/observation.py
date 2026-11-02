@@ -1,5 +1,5 @@
 from __future__ import annotations
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from datetime import datetime
@@ -17,7 +17,7 @@ class Observation(Base):
     dense_veg_pct: Mapped[float | None] 
     aoi_clear_pct: Mapped[float]
     platform: Mapped[str]
-    observed_at: Mapped[datetime]
+    observed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     raster_id: Mapped[str]
     usable: Mapped[bool]
     analysis_id: Mapped[int] = mapped_column(ForeignKey("analyses.id"), index=True)
