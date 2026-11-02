@@ -19,9 +19,41 @@
             </span>
         </div>
 
-        <div class="ndvi-chart mb-3">
-            <canvas
-                data-ndvi-chart='{{ [analysis.water_pct, analysis.built_bare_pct, analysis.sparse_veg_pct, analysis.dense_veg_pct] | tojson }}'></canvas>
+        <div class="row align-items-center g-4 mb-3">
+            <div class="col-md-5">
+                <div class="ndvi-chart position-relative">
+                    <canvas
+                        data-ndvi-chart='{{ [analysis.water_pct, analysis.built_bare_pct, analysis.sparse_veg_pct, analysis.dense_veg_pct] | tojson }}'></canvas>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="row row-cols-2 g-2 small">
+                    <div class="col">
+                        <div class="metric metric-water">
+                            <div class="fs-5 fw-semibold">{{ "%.0f"|format(analysis.water_pct) }} %</div>
+                            <div>Water</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="metric metric-built">
+                            <div class="fs-5 fw-semibold">{{ "%.0f"|format(analysis.built_bare_pct) }} %</div>
+                            <div>Built / bare soil</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="metric metric-sparse">
+                            <div class="fs-5 fw-semibold">{{ "%.0f"|format(analysis.sparse_veg_pct) }} %</div>
+                            <div>Sparse vegetation</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="metric metric-dense">
+                            <div class="fs-5 fw-semibold">{{ "%.0f"|format(analysis.dense_veg_pct) }} %</div>
+                            <div>Dense vegetation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <ul class="list-group list-group-flush small">

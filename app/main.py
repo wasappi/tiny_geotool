@@ -5,7 +5,7 @@ from app.routers import analysis
 from app.internal import admin
 from app.dependencies import get_token_header
 from fastapi.staticfiles import StaticFiles
-from datetime import date
+from datetime import date, timedelta
 from app.templating import templates
 from app import models  # noqa: F401 — registers models on Base.metadata
 
@@ -20,8 +20,10 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    current_month = date.today().strftime("%Y-%m")
-    return templates.TemplateResponse(request=request, name="index.html", context={"current_month": current_month})
+    today = date.today()
+    current_month = today.strftime("%Y-%m")
+    default_month = (today.replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
+    return templates.TemplateResponse(request=request, name="index.html", context={"current_month": current_month, "default_month": default_month})
 
 @app.get("/up")
 def up():

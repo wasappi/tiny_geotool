@@ -30,8 +30,8 @@
                     hx-indicator="#analyse-spinner" , hx-disabled-elt="#analyse-btn, #datetime_month">
                     <div class="mb-3">
                         <label for="datetime_month" class="form-label">Month</label>
-                        <input type="month" id="datetime_month" name="datetime_month" value="{{ current_month }}"
-                            class="form-control form-control-sm font-monospace" required>
+                        <input type="month" id="datetime_month" name="datetime_month" value="{{ default_month }}"
+                            max="{{ current_month }}" class="form-control form-control-sm font-monospace" required>
                     </div>
 
                     <div class="mb-3">

@@ -40,3 +40,29 @@
 .ndvi-dense {
     background-color: #15803d;
 }
+
+.metric {
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    height: 100%;
+}
+
+.metric-water {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.metric-built {
+    background-color: #e7e5e4;
+    color: #57534e;
+}
+
+.metric-sparse {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.metric-dense {
+    background-color: #bbf7d0;
+    color: #14532d;
+}
