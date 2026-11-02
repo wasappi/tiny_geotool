@@ -1,14 +1,17 @@
 service: geotool
-image: darkmode/geotool
+image: wasappi/tiny_geotool
 
 servers:
   web:
     - 89.167.34.4
 
 proxy:
-  ssl: true
-  host: geotool.darkmode.com
+  ssl: false
+  host: geotool.darkmode.sh
   app_port: 8000
+  run:
+    http_port: 8080
+    https_port: 8443
 
 registry:
   server: ghcr.io
@@ -17,7 +20,7 @@ registry:
     - KAMAL_REGISTRY_PASSWORD
 
 builder:
-  arch: amd64
+  arch: arm64
 
 env:
   secret:
