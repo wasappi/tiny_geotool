@@ -32,3 +32,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 async def root(request: Request):
     current_month = date.today().strftime("%Y-%m")
     return templates.TemplateResponse(request=request, name="index.html", context={"current_month": current_month})
+
+@app.get("/up")
+def up():
+    return {"status": "ok"}

@@ -1,0 +1,39 @@
+service: geotool
+image: darkmode/geotool
+
+servers:
+  web:
+    - 89.167.34.4
+
+proxy:
+  ssl: true
+  host: geotool.darkmode.com
+  app_port: 8000
+
+registry:
+  server: ghcr.io
+  username: wasappi
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+
+env:
+  secret:
+    - DATABASE_URL
+    - API_KEY
+    - MAPBOX_PUBLIC_TOKEN
+
+accessories:
+  db:
+    image: postgres:16
+    host: 89.167.34.4
+    env:
+      clear:
+        POSTGRES_USER: geotool
+        POSTGRES_DB: geotool
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
