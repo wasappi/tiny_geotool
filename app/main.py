@@ -1,25 +1,15 @@
 from __future__ import annotations
 from fastapi import FastAPI, Depends, Request
-from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from app.database import engine, Base
 from app.routers import analysis
 from app.internal import admin
-from app.dependencies import get_query_token, get_token_header
-from app.config import settings 
+from app.dependencies import get_token_header
 from fastapi.staticfiles import StaticFiles
 from datetime import date
 from app.templating import templates
-import app.models
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    Base.metadata.create_all(engine)
-    yield
+from app import models  # noqa: F401 — registers models on Base.metadata
 
 app = FastAPI(
-    lifespan=lifespan,
     title="GeoTIFF Analytics API",
     description="API to analyse tiff dataset to extract NDVI, Cloud coverage and other metrics",
     version="0.1")
