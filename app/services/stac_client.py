@@ -45,12 +45,3 @@ def search(coords:list[float], datetime_month: str, max_items:int=3, collections
     return {"measures": measures}
 
 
-# Output
-# Brussels — June 2026
-# date         clear   greenness
-# 2026-06-03    96%     41.2%
-# 2026-06-11    88%     39.8%
-# 2026-06-18    23%     —   (too cloudy, skipped)
-# 2026-06-26    99%     42.5%
-# -----------------------------
-# Monthly median (3 clear dates): 41.2%
