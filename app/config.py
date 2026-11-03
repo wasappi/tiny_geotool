@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     extra="ignore",
     )
     database_url: str
+    admin_token: SecretStr
 
 
 settings = Settings()

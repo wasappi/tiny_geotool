@@ -1,27 +1,21 @@
 [project]
 name = "tiny-geotool"
 version = "0.1.0"
-description = "Add your description here"
+description = "Monthly vegetation-cover analysis from Sentinel-2 imagery"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.20.1",
     "fastapi>=0.162.0",
-    "httpx>=0.28.1",
-    "itsdangerous>=2.2.0",
     "jinja2>=3.1.6",
-    "matplotlib>=3.11.2",
     "psycopg[binary]>=3.3.6",
-    "pwdlib[argon2]>=0.3.1",
     "pydantic>=2.14.1",
     "pydantic-settings>=2.16.2",
     "pystac-client>=0.9.1",
-    "pytest>=9.1.1",
     "python-multipart>=0.0.32",
     "rasterio>=1.5.2",
     "shapely>=2.2.0",
     "sqlalchemy>=2.1.6",
-    "typer>=0.27.3",
     "uvicorn>=0.54.0",
 ]
 
