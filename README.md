@@ -64,23 +64,23 @@ Routers only handle HTTP (parsing and validating input, rendering templates); th
 
 ## Running locally
 
-Requirements: Python 3.12, [uv](https://docs.astral.sh/uv/), PostgreSQL, and a [Mapbox public token](https://account.mapbox.com/).
+Requirements: Python 3.12, [uv](https://docs.astral.sh/uv/), Docker, the [Bitwarden CLI](https://bitwarden.com/help/cli/) and `jq`.
 
 ```bash
 git clone https://github.com/wasappi/tiny_geotool.git
 cd tiny_geotool
 uv sync
+docker compose up -d   # PostgreSQL on localhost:5433
+bin/env-sync           # writes .env from the Bitwarden item "geotool-dev"
 ```
 
-Create a `.env` file at the project root:
+`bin/env-sync` expects a Bitwarden item named `geotool-dev` with the custom fields `MAPBOX_PUBLIC_TOKEN` and `ADMIN_TOKEN`; it adds the local `DATABASE_URL` itself. Without Bitwarden, create `.env` by hand:
 
 ```
-DATABASE_URL=postgresql+psycopg://geotool:geotool@localhost:5432/geotool
+DATABASE_URL=postgresql+psycopg://geotool:geotool@localhost:5433/geotool
 MAPBOX_PUBLIC_TOKEN=pk.…
 ADMIN_TOKEN=…
 ```
-
-To run PostgreSQL with Docker instead, `docker compose up -d` starts it on port 5433 (use `localhost:5433` in `DATABASE_URL`).
 
 Create the database schema and start the server:
 
@@ -95,7 +95,7 @@ Then open http://127.0.0.1:8000. The interactive API docs are at `/docs`.
 
 The app is packaged as a Docker image and deployed with [Kamal](https://kamal-deploy.org/): `kamal deploy` builds the image from the last commit, pushes it to GitHub Container Registry, and swaps containers with zero downtime, using `/up` as the health check. PostgreSQL runs as a Kamal accessory on the same server. Database migrations run automatically when the container starts.
 
-Secrets live in `.kamal/secrets` (not committed). The production Mapbox token is restricted to the deployed domain.
+Secrets are fetched from Bitwarden at deploy time: [.kamal/secrets](.kamal/secrets) holds only the fetch commands and reads the item `geotool-prod` (fields `MAPBOX_PUBLIC_TOKEN`, `ADMIN_TOKEN`, `POSTGRES_PASSWORD`). `DATABASE_URL` is built from `POSTGRES_PASSWORD`, and the registry password comes from `gh auth token`. Deploying needs `kamal`, `bw`, `gh` logged in with the `write:packages` scope, SSH access to the server and `BW_ACCOUNT` set to the Bitwarden account email (used only if `bw` is logged out). The production Mapbox token is restricted to the deployed domain.
 
 ## Design choices
 
