@@ -2,6 +2,7 @@
 
 Monthly vegetation-cover analysis from Sentinel-2 satellite imagery. Frame an area on a map, pick a month, and the app returns its land-cover composition (water, built-up / bare soil, sparse and dense vegetation), computed from cloud-free observations only.
 
+![Tiny Geo Tool: satellite map with the month and bbox form, the land-cover result for October 2026 as a doughnut chart with class percentages, and the list of recent analyses](docs/screenshot.png)
 
 
 ## Features
