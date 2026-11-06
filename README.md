@@ -10,6 +10,7 @@ Monthly vegetation-cover analysis from Sentinel-2 satellite imagery. Frame an ar
 - Searches the Sentinel-2 catalogue and reads only the pixels covering the area (no full-tile download)
 - Masks clouds and cloud shadows per pixel, and skips observations where the area is mostly covered
 - Classifies each pixel by NDVI and averages the composition over the month's clear observations
+- Runs each analysis in the background and polls its status, so the page responds immediately and the map stays locked until the result arrives
 - Shows the result as a doughnut chart, with every observation listed (including the excluded ones and why)
 - Stores every analysis in PostgreSQL and lists the five most recent ones
 
@@ -101,13 +102,14 @@ Secrets are fetched from Bitwarden at deploy time: [.kamal/secrets](.kamal/secre
 
 - **Filtering before results.** Tile-level metadata is only used as a pre-filter; clouds and coverage are measured in the selected area, and excluded observations stay visible with the reason.
 - **Synchronous code.** pystac-client and Rasterio are blocking libraries, and the database is not the bottleneck, so endpoints are plain `def` functions run in FastAPI's thread pool, with synchronous SQLAlchemy.
+- **Background analysis with polling.** Submitting the form validates the input, creates the analysis with status `processing` and returns at once; the work runs as a FastAPI `BackgroundTasks` job in its own database session and ends with status `done` or `failed` (with the error message). The page polls `/check-status/{id}` every 2 s with HTMX: the endpoint answers `204` (nothing to swap) while the analysis runs, then the result or error card, which replaces the polling element and stops the polling.
 - **Summary stored once.** An analysis never changes after it is computed, so its summary is stored with it rather than recomputed on each view.
 
 ## Limitations and next steps
 
 - **At most 3 observations per month.** The search keeps the first 3 catalogue items, so the monthly average may not use every pass of the month. Raising the cap is easy, but each item costs three remote reads.
 - **Single tile only.** An area that no single tile covers is skipped; mosaicking neighbouring tiles is not implemented.
-- **Synchronous analysis.** Each observation is read over HTTP during the request, so an analysis can take several seconds. Running analyses in the background and polling their status would be the next step. (FastAPI BackgroundTasks + new col status - pending / running / done / failed /... + htmx polling)
+- **In-process background jobs.** `BackgroundTasks` runs in the web process, so an analysis in progress is lost if the container restarts or is redeployed, and its row stays `processing`. A job queue (arq, RQ or Celery) would make jobs durable and retryable; the status column and the polling would stay the same.
 - **Fixed thresholds.** NDVI classes, the 60 % tile pre-filter and the 80 % clear threshold are fixed; they could become parameters.
 - **Thin cirrus is masked** like other clouds, which is conservative; it could be tolerated with a correction.
 - Change detection between months and a seasonal NDVI curve are natural extensions.
