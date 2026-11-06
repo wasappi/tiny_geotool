@@ -20,14 +20,13 @@
 <body>
     {% include "partials/navbar.html" %}
 
-    <div class="container-fluid mt-3 px-4">
+    <div class="container-fluid mt-3 px-4 bg-light">
         <div class="row">
 
             <!-- LEFT SIDEBAR -->
             <div class="col-md-4 border-end pe-3 mb-3">
                 <div id="map" class="rounded mb-3" data-token="{{ mapbox_token }}"></div>
-                <form hx-post="/analysis" hx-target="#raster-analysis-response" hx-swap="innerHTML" ,
-                    hx-indicator="#analyse-spinner" , hx-disabled-elt="#analyse-btn, #datetime_month">
+                <form id="analysis-form" hx-post="/analysis" hx-target="#raster-analysis-response" hx-swap="innerHTML">
                     <div class="mb-3">
                         <label for="datetime_month" class="form-label">Month</label>
                         <input type="month" id="datetime_month" name="datetime_month" value="{{ default_month }}"
